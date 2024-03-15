@@ -4,7 +4,9 @@ const {
   postBoardgame,
   getBoardgames,
   getBoardgameByTitle,
-  getBoardgameByPlayers
+  getBoardgameByPlayers,
+  editBoardgame,
+  deleteBoardgame
 } = require('../controllers/boardgames');
 
 const boardgameRouter = require('express').Router();
@@ -19,5 +21,12 @@ boardgameRouter.post(
 boardgameRouter.get('/', getBoardgames);
 boardgameRouter.get('/title/:title', getBoardgameByTitle);
 boardgameRouter.get('/players/:players', getBoardgameByPlayers);
+boardgameRouter.put(
+  '/:id',
+  isLoggedIn,
+  uploadBoardgames.array('img'),
+  editBoardgame
+);
+boardgameRouter.delete('/:id', isLoggedIn, isAdmin, deleteBoardgame);
 
 module.exports = boardgameRouter;

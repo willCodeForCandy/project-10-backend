@@ -1,3 +1,4 @@
+const { deleteFromCloudinary } = require('../../utils/deleteFromCloudinary');
 const Boardgame = require('../models/boardgames');
 
 const postBoardgame = async (req, res, next) => {
@@ -24,7 +25,6 @@ const postBoardgame = async (req, res, next) => {
     next(error);
   }
 };
-
 const getBoardgames = async (req, res, next) => {
   try {
     const allBoardgames = await Boardgame.find();
@@ -44,7 +44,6 @@ const getBoardgameByTitle = async (req, res, next) => {
     next(error);
   }
 };
-
 const getBoardgameByPlayers = async (req, res, next) => {
   try {
     const { players } = req.params;
@@ -61,9 +60,50 @@ const getBoardgameByPlayers = async (req, res, next) => {
     next(error);
   }
 };
+const editBoardgame = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const existingBoardgame = await Boardgame.findById(id);
+    const newBoardgame = new Boardgame(req.body);
+    newBoardgame._id = id;
+    if (req.files) {
+      for (let img of req.files) {
+        newBoardgame.img.push(img.path);
+      }
+    }
+    newBoardgame.img = [...existingBoardgame.img, ...newBoardgame.img];
+    const updatedBoardgame = await Boardgame.findByIdAndUpdate(
+      id,
+      newBoardgame,
+      { new: true }
+    );
+    return res.status(200).json({
+      message: 'Juego actualizado correctamente',
+      game: updatedBoardgame
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const deleteBoardgame = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedGame = await Boardgame.findByIdAndDelete(id);
+
+    deletedGame.img.forEach((url) => {
+      deleteFromCloudinary(url);
+    });
+
+    return res.status(200).json({ message: 'Juego eliminado', deletedGame });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   postBoardgame,
   getBoardgames,
   getBoardgameByTitle,
-  getBoardgameByPlayers
+  getBoardgameByPlayers,
+  editBoardgame,
+  deleteBoardgame
 };
