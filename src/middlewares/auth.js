@@ -1,4 +1,5 @@
-const User = require('../api/models/users');
+const Event = require('../api/models/event');
+const User = require('../api/models/user');
 const { verifyJwt } = require('../utils/jwt');
 
 const isLoggedIn = async (req, res, next) => {
@@ -16,18 +17,36 @@ const isLoggedIn = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    return next(error);
+    return res
+      .status(401)
+      .json('No estás autorizado para realizar esta acción');
   }
 };
 
 const isAdmin = async (req, res, next) => {
   try {
     req.user.role === 'admin'
-      ? next()
-      : res.status(401).json('Esta acción requiere permisos de administrador');
+      ? (req.user.isAdmin = true)
+      : (req.user.isAdmin = false);
+    next();
   } catch (error) {
     return next(error);
   }
 };
 
-module.exports = { isAdmin, isLoggedIn };
+const isOrganizer = async (req, res, next) => {
+  try {
+    req.user.isOrganizer = false;
+    const eventId = req.params.id;
+    const event = await Event.findById(eventId).populate('organizer');
+    const organizerId = event.organizer.id;
+    if (req.user.id === organizerId) {
+      req.user.isOrganizer = true;
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { isAdmin, isLoggedIn, isOrganizer };

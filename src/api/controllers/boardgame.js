@@ -1,5 +1,5 @@
 const { deleteFromCloudinary } = require('../../utils/deleteFromCloudinary');
-const Boardgame = require('../models/boardgames');
+const Boardgame = require('../models/boardgame');
 
 const postBoardgame = async (req, res, next) => {
   try {
@@ -12,7 +12,6 @@ const postBoardgame = async (req, res, next) => {
         .json(`${existingBoardgame.title} ya está en la base de datos.`);
     }
     // Si no encuentra otro juego con el mismo nombre, entonces creo el dato nuevo y proceso las imágenes
-    console.log(req.body);
     const newBoardgame = new Boardgame(req.body);
     if (req.files) {
       req.files.forEach((file) => {
@@ -64,6 +63,9 @@ const editBoardgame = async (req, res, next) => {
   try {
     const { id } = req.params;
     const existingBoardgame = await Boardgame.findById(id);
+    if (!existingBoardgame) {
+      return res.status(404).json('Juego no encontrado 🦕');
+    }
     const newBoardgame = new Boardgame(req.body);
     newBoardgame._id = id;
     if (req.files) {
@@ -99,6 +101,7 @@ const deleteBoardgame = async (req, res, next) => {
     next(error);
   }
 };
+
 module.exports = {
   postBoardgame,
   getBoardgames,

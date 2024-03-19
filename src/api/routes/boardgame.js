@@ -7,7 +7,7 @@ const {
   getBoardgameByPlayers,
   editBoardgame,
   deleteBoardgame
-} = require('../controllers/boardgames');
+} = require('../controllers/boardgame');
 
 const boardgameRouter = require('express').Router();
 

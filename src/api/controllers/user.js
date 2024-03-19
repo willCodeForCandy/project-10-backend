@@ -1,7 +1,7 @@
 const { checkForDuplicates } = require('../../utils/checkForDuplicates');
 const { deleteFromCloudinary } = require('../../utils/deleteFromCloudinary');
 const { generateSign } = require('../../utils/jwt');
-const User = require('../models/users');
+const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 const register = async (req, res, next) => {
@@ -53,10 +53,10 @@ const login = async (req, res, next) => {
     return next(error);
   }
 };
-//TODO: populate cuando ya estén hechos los juegos
+
 const getUsers = async (req, res, next) => {
   try {
-    const allUsers = await User.find();
+    const allUsers = await User.find().select('-password').populate('favGames');
     return res.status(200).json(allUsers);
   } catch (error) {
     return next(error);

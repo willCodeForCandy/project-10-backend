@@ -6,7 +6,7 @@ const {
   getUsers,
   editUser,
   deleteUser
-} = require('../controllers/users');
+} = require('../controllers/user');
 
 const userRouter = require('express').Router();
 
