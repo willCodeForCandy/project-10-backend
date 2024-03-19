@@ -8,7 +8,6 @@ const boardgameSchema = new mongoose.Schema(
     minPlayers: Number,
     maxPlayers: Number,
     rating: Number,
-    publisher: { type: String, trim: true },
     price: Number
   },
   { timestamps: true, collection: 'boardgames' }
