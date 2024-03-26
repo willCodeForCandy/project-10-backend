@@ -10,7 +10,7 @@ const eventRouter = require('express').Router();
 
 eventRouter.post('/', isLoggedIn, postEvent);
 eventRouter.get('/', getEvents);
-eventRouter.put('/:id', isLoggedIn, isOrganizer, isAdmin, updateEvent);
+eventRouter.put('/:id', isLoggedIn, isOrganizer, updateEvent);
 eventRouter.delete('/:id', isLoggedIn, isOrganizer, isAdmin, deleteEvent);
 
 module.exports = eventRouter;

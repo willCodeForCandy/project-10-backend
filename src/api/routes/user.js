@@ -10,7 +10,7 @@ const {
 
 const userRouter = require('express').Router();
 
-userRouter.post('/register', uploadUsers.single('profilePic'), register);
+userRouter.post('/register', register);
 userRouter.post('/login', login);
 userRouter.get('/', isLoggedIn, isAdmin, getUsers);
 userRouter.put('/:id', isLoggedIn, uploadUsers.single('profilePic'), editUser);

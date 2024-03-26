@@ -14,19 +14,14 @@ const register = async (req, res, next) => {
     if (duplicateEmail) {
       return res.status(400).json('Ya hay alguien registrado con ese email');
     }
-    const { username, password, email, profilePic, favGames } = req.body;
+    const { username, password, email } = req.body;
     const newUser = new User({
       username,
       password,
-      profilePic,
-      email,
-      favGames
+      email
     });
     //Todos los usuarios seran USER por default
     newUser.role = 'user';
-    if (req.file) {
-      newUser.profilePic = req.file.path;
-    }
     const savedUser = await newUser.save();
     return res.status(201).json(savedUser);
   } catch (error) {

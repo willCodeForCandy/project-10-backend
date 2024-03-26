@@ -15,9 +15,9 @@ connectCloudinary();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/boardgames', boardgameRouter);
-app.use('/api/v1/events', eventRouter);
+app.use('/api/v2/users', userRouter);
+app.use('/api/v2/boardgames', boardgameRouter);
+app.use('/api/v2/events', eventRouter);
 app.use('*', (req, res, next) => {
   const error = new Error('Route not found 🦖');
   error.status = 404;
